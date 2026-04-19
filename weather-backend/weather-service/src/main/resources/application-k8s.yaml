@@ -1,0 +1,21 @@
+spring:
+  data:
+    redis:
+      host: redis
+      port: 6379
+  r2dbc:
+    url: r2dbc:postgresql://postgres:5432/weather_db
+    username: weather_user
+    password: weather_pass
+  datasource:
+    url: jdbc:postgresql://postgres:5432/weather_db
+    username: weather_user
+    password: weather_pass
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak:8080/realms/weather-dashboard
+
+server:
+  port: 8082

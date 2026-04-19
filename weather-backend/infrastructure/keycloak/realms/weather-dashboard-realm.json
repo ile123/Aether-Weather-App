@@ -1,0 +1,98 @@
+{
+  "realm": "weather-dashboard",
+  "enabled": true,
+  "displayName": "Weather Dashboard",
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+
+  "accessTokenLifespan": 600,
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 36000,
+  "offlineSessionIdleTimeout": 2592000,
+  "refreshTokenMaxReuse": 0,
+  "revokeRefreshToken": true,
+
+  "roles": {
+    "realm": [
+      { "name": "USER", "description": "Standard user" },
+      { "name": "ADMIN", "description": "Administrator" },
+      {
+        "name": "PREMIUM_USER",
+        "description": "Premium user with extra features"
+      }
+    ]
+  },
+
+  "clients": [
+    {
+      "clientId": "weather-frontend",
+      "name": "Weather Angular Frontend",
+      "enabled": true,
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "redirectUris": ["http://localhost:4200/*", "http://localhost:4200"],
+      "webOrigins": ["http://localhost:4200"],
+      "protocol": "openid-connect"
+    },
+    {
+      "clientId": "weather-backend",
+      "name": "Weather Backend Services",
+      "enabled": true,
+      "publicClient": false,
+      "secret": "${KEYCLOAK_BACKEND_SECRET:-change-me-in-production}",
+      "standardFlowEnabled": false,
+      "serviceAccountsEnabled": true,
+      "directAccessGrantsEnabled": true,
+      "protocol": "openid-connect",
+      "redirectUris": ["http://localhost:8081/*"]
+    }
+  ],
+
+  "users": [
+    {
+      "username": "test-user",
+      "email": "user@weather.com",
+      "firstName": "Test",
+      "lastName": "User",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "password", "temporary": false }
+      ],
+      "realmRoles": ["USER", "default-roles-weather-dashboard"]
+    },
+    {
+      "username": "test-admin",
+      "email": "admin@weather.com",
+      "firstName": "Test",
+      "lastName": "Admin",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "password", "temporary": false }
+      ],
+      "realmRoles": ["USER", "ADMIN", "default-roles-weather-dashboard"]
+    },
+    {
+      "username": "test-premium",
+      "email": "premium@weather.com",
+      "firstName": "Test",
+      "lastName": "Premium",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        { "type": "password", "value": "password", "temporary": false }
+      ],
+      "realmRoles": ["USER", "PREMIUM_USER", "default-roles-weather-dashboard"]
+    }
+  ]
+}

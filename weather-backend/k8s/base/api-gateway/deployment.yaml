@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: weather-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      initContainers:
+        - name: wait-for-keycloak
+          image: busybox
+          command:
+            [
+              "sh",
+              "-c",
+              "until nc -z keycloak 8080; do echo waiting for keycloak; sleep 2; done",
+            ]
+      containers:
+        - name: api-gateway
+          image: api-gateway:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 512Mi
+              cpu: 500m
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "k8s"
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8081
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 10

@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - secrets.yaml
+  - resource-quota.yaml
+  - limit-range.yaml
+  - postgres/deployment.yaml
+  - postgres/service.yaml
+  - postgres/init-configmap.yaml
+  - keycloak/deployment.yaml
+  - keycloak/service.yaml
+  - kafka/deployment.yaml
+  - kafka/service.yaml
+  - redis/deployment.yaml
+  - redis/service.yaml
+  - zipkin/deployment.yaml
+  - zipkin/service.yaml
+  - api-gateway/deployment.yaml
+  - api-gateway/service.yaml
+  - weather-service/deployment.yaml
+  - weather-service/service.yaml
