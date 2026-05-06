@@ -47,4 +47,7 @@ public class WeatherLocation {
     @CreatedDate
     @Column("created_at")
     private LocalDateTime createdAt;
+
+    @Column("user_id")
+    private String userId;
 }

@@ -20,7 +20,7 @@ spec:
       containers:
         - name: keycloak
           image: quay.io/keycloak/keycloak:latest
-          args: ["start-dev"]
+          args: ["start-dev", "--import-realm"]
           ports:
             - containerPort: 8080
           resources:
@@ -53,9 +53,16 @@ spec:
               value: "true"
             - name: JAVA_OPTS_APPEND
               value: "-Xms256m -Xmx512m"
+          volumeMounts:
+            - name: realm-config
+              mountPath: /opt/keycloak/data/import
           readinessProbe:
             httpGet:
               path: /health/ready
               port: 9000
             initialDelaySeconds: 30
             periodSeconds: 10
+      volumes:
+        - name: realm-config
+          configMap:
+            name: keycloak-realm-config

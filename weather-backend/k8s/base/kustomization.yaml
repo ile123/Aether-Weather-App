@@ -11,6 +11,7 @@ resources:
   - postgres/init-configmap.yaml
   - keycloak/deployment.yaml
   - keycloak/service.yaml
+  - keycloak/config-map.yaml
   - kafka/deployment.yaml
   - kafka/service.yaml
   - redis/deployment.yaml

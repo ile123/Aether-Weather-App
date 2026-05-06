@@ -37,4 +37,6 @@ public interface WeatherLocationRepository
         """)
     Flux<WeatherLocation> findNearbyLocations(
             BigDecimal lat, BigDecimal lon, BigDecimal radius);
+
+    Flux<WeatherLocation> findByUserId(String userId);
 }
