@@ -30,15 +30,19 @@ spring:
               args:
                 name: alertCB
                 fallbackUri: forward:/fallback/alert
-
 server:
   port: ${GATEWAY_PORT:8081}
-
 management:
   endpoints:
     web:
       exposure:
         include: health,info,metrics
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://${ZIPKIN_HOST:localhost}:9411/api/v2/spans
   endpoint:
     health:
       probes:
@@ -49,7 +53,6 @@ management:
           include: livenessState
         readiness:
           include: readinessState
-
 resilience4j:
   timelimiter:
     instances:
@@ -73,8 +76,9 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
         minimumNumberOfCalls: 5
-
 logging:
   level:
-    org.springframework.cloud.gateway: DEBUG
-    io.github.resilience4j: DEBUG
+    org.springframework.cloud.gateway: INFO
+    io.github.resilience4j: INFO
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

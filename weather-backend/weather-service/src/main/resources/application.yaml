@@ -17,20 +17,19 @@ spring:
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.xml
     enabled: true
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${KEYCLOAK_URL:http://localhost:8080}/realms/weather-dashboard
-
 server:
   port: ${SERVER_PORT:8082}
-
 management:
   endpoints:
     web:
       exposure:
         include: health,info,metrics
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://${ZIPKIN_HOST:localhost}:9411/api/v2/spans
   endpoint:
     health:
       probes:
@@ -41,7 +40,6 @@ management:
           include: livenessState
         readiness:
           include: readinessState,r2dbc
-
 resilience4j:
   circuitbreaker:
     instances:
@@ -56,5 +54,5 @@ resilience4j:
       openMeteo:
         timeoutDuration: 10s
 logging:
-  level:
-    org.springframework.boot.autoconfigure: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

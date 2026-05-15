@@ -48,6 +48,7 @@ echo "Starting port-forwards..."
 kubectl port-forward -n weather-app svc/api-gateway 8081:8080 &
 kubectl port-forward -n weather-app svc/kafka-ui 8090:8080 &
 kubectl port-forward -n weather-app svc/alert-service 8083:8083 &
+kubectl port-forward -n weather-app svc/zipkin 9411:9411 &
 sleep 3
 echo ""
 echo "================================================"
@@ -55,6 +56,8 @@ echo "  Ready! Endpoints:"
 echo "  API Gateway: http://localhost:8081"
 echo "  Kafka UI: http://localhost:8090"
 echo "  Alert Service: http://localhost:8083"
+echo "  Zipkin UI: http://localhost:9411"
+echo "  WARNING: Sometimes the port fowarding might die so please just copy the port-foward commands from above and manually run them"
 echo "================================================"
 echo ""
 echo "Press Ctrl+C to stop port-forwarding"

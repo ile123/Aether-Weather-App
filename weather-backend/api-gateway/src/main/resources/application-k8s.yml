@@ -28,7 +28,16 @@ spring:
                 fallbackUri: forward:/fallback/alert
 server:
   port: 8081
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://zipkin:9411/api/v2/spans
 logging:
   level:
     org.springframework.cloud.gateway: INFO
     io.github.resilience4j: INFO
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
