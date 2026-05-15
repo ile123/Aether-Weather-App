@@ -9,11 +9,13 @@ resources:
   - postgres/deployment.yaml
   - postgres/service.yaml
   - postgres/init-configmap.yaml
-  - keycloak/deployment.yaml
-  - keycloak/service.yaml
-  - keycloak/config-map.yaml
+  #- keycloak/deployment.yaml
+  #- keycloak/service.yaml
+  #- keycloak/config-map.yaml
   - kafka/deployment.yaml
   - kafka/service.yaml
+  - kafka-ui/deployment.yaml
+  - kafka-ui/service.yaml
   - redis/deployment.yaml
   - redis/service.yaml
   - zipkin/deployment.yaml
@@ -22,3 +24,5 @@ resources:
   - api-gateway/service.yaml
   - weather-service/deployment.yaml
   - weather-service/service.yaml
+  - alert-service/deployment.yaml
+  - alert-service/service.yaml

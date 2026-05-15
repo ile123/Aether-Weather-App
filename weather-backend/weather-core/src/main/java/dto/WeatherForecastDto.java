@@ -11,4 +11,5 @@ public record WeatherForecastDto(
         BigDecimal precipitation,
         Integer weatherCode,
         String description
-) {}
+) {
+}

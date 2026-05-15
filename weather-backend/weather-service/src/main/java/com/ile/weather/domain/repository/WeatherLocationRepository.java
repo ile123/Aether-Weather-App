@@ -21,20 +21,20 @@ public interface WeatherLocationRepository
     Flux<WeatherLocation> findByCountryCode(String countryCode);
 
     @Query("""
-        SELECT * FROM weather_location
-        WHERE name ILIKE '%' || :query || '%'
-        ORDER BY name
-        LIMIT :limit
-        """)
+            SELECT * FROM weather_location
+            WHERE name ILIKE '%' || :query || '%'
+            ORDER BY name
+            LIMIT :limit
+            """)
     Flux<WeatherLocation> searchByName(String query, int limit);
 
     @Query("""
-        SELECT * FROM weather_location
-        WHERE ABS(latitude - :lat) < :radius
-        AND ABS(longitude - :lon) < :radius
-        ORDER BY ABS(latitude - :lat) + ABS(longitude - :lon)
-        LIMIT 10
-        """)
+            SELECT * FROM weather_location
+            WHERE ABS(latitude - :lat) < :radius
+            AND ABS(longitude - :lon) < :radius
+            ORDER BY ABS(latitude - :lat) + ABS(longitude - :lon)
+            LIMIT 10
+            """)
     Flux<WeatherLocation> findNearbyLocations(
             BigDecimal lat, BigDecimal lon, BigDecimal radius);
 

@@ -54,5 +54,6 @@ public record ForecastResponse(
 
             @JsonProperty("is_day")
             List<Integer> isDay
-    ) {}
+    ) {
+    }
 }

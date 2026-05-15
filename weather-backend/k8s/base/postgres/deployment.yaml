@@ -33,7 +33,7 @@ spec:
               mountPath: /docker-entrypoint-initdb.d
           readinessProbe:
             exec:
-              command: ["pg_isready", "-U", "postgres"]
+              command: [ "pg_isready", "-U", "postgres" ]
             initialDelaySeconds: 10
             periodSeconds: 5
       volumes:

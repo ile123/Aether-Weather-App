@@ -34,5 +34,6 @@ public record GeocodingResponse(
 
             @JsonProperty("population")
             Long population
-    ) {}
+    ) {
+    }
 }

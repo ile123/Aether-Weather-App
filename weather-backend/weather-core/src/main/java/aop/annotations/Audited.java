@@ -9,5 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Audited {
     String action() default "";
+
     boolean logArgs() default false;
 }

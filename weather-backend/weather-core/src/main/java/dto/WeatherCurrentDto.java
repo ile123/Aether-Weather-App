@@ -13,4 +13,5 @@ public record WeatherCurrentDto(
         String description,
         Boolean isDay,
         Instant recordedAt
-) {}
+) {
+}

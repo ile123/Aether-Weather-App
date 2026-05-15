@@ -1,4 +1,6 @@
 spring:
+  kafka:
+    bootstrap-servers: kafka:9092
   data:
     redis:
       host: redis
@@ -11,11 +13,12 @@ spring:
     url: jdbc:postgresql://postgres:5432/weather_db
     username: weather_user
     password: weather_pass
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://keycloak:8080/realms/weather-dashboard
-
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    enabled: true
 server:
   port: 8082
+logging:
+  level:
+    liquibase: DEBUG
+    org.springframework.boot.autoconfigure.liquibase: DEBUG

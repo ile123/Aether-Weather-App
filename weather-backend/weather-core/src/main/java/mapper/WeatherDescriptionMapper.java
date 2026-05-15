@@ -5,10 +5,10 @@ import java.util.Map;
 public class WeatherDescriptionMapper {
 
     private static final Map<Integer, String> WMO_CODES = Map.of(
-            0,  "Clear sky",
-            1,  "Mainly clear",
-            2,  "Partly cloudy",
-            3,  "Overcast",
+            0, "Clear sky",
+            1, "Mainly clear",
+            2, "Partly cloudy",
+            3, "Overcast",
             45, "Foggy",
             61, "Light rain",
             63, "Moderate rain",

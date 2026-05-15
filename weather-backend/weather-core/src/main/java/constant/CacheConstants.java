@@ -2,7 +2,8 @@ package constant;
 
 public final class CacheConstants {
 
-    private CacheConstants() {}
+    private CacheConstants() {
+    }
 
     public static final String WEATHER_CURRENT_CACHE = "weather:current";
     public static final String WEATHER_FORECAST_CACHE = "weather:forecast";

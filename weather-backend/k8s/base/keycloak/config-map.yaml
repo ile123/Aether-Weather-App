@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: keycloak-realm-config
   namespace: weather-app
-data: {}
+data: { }

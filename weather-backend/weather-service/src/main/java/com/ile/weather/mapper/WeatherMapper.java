@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(
         config = WeatherMapperConfig.class,
-        imports = { WeatherDescriptionMapper.class, java.time.ZoneOffset.class }
+        imports = {WeatherDescriptionMapper.class, java.time.ZoneOffset.class}
 )
 public interface WeatherMapper {
 

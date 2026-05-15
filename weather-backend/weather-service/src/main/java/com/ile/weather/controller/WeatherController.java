@@ -44,7 +44,7 @@ public class WeatherController {
                         ApiResponse.<WeatherCurrentDto>builder()
                                 .success(true)
                                 .data(result)
-                                .timestamp(LocalDateTime.from(Instant.now()))
+                                .timestamp(LocalDateTime.now())
                                 .build()
                 ))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
@@ -59,48 +59,28 @@ public class WeatherController {
 
     @GetMapping("/locations")
     public Flux<WeatherLocationDto> getSavedLocations(
-            @AuthenticationPrincipal Jwt jwt) {
-        return weatherService.getSavedLocations(jwt.getSubject());
+            @RequestHeader(value = "X-User-Id", defaultValue = "anonymous") String userId) {
+        return weatherService.getSavedLocations(userId);
     }
 
     @PostMapping("/locations")
     public Mono<ResponseEntity<ApiResponse<WeatherLocationDto>>> saveLocation(
-            @AuthenticationPrincipal Jwt jwt,
+            @RequestHeader(value = "X-User-Id", defaultValue = "anonymous") String userId,
             @RequestBody @Valid SaveLocationRequest request) {
-        return weatherService.saveLocation(jwt.getSubject(), request.locationName())
+        return weatherService.saveLocation(userId, request.locationName())
                 .map(result -> ResponseEntity.status(HttpStatus.CREATED).body(
                         ApiResponse.<WeatherLocationDto>builder()
                                 .success(true)
                                 .data(result)
-                                .timestamp(LocalDateTime.from(Instant.now()))
+                                .timestamp(LocalDateTime.now())
                                 .build()
                 ));
     }
 
     @GetMapping(value = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<WeatherCurrentDto>> streamWeather(
-            @RequestParam @NotBlank String location,
-            @AuthenticationPrincipal Jwt jwt) {
+            @RequestParam @NotBlank String location) {
         return weatherStreamService.streamWeatherForLocation(location)
-                .map(weatherData -> ServerSentEvent.<WeatherCurrentDto>builder()
-                        .id(UUID.randomUUID().toString())
-                        .event("weather-update")
-                        .data(weatherData)
-                        .build()
-                )
-                .mergeWith(
-                        Flux.interval(Duration.ofSeconds(15))
-                                .map(tick -> ServerSentEvent.<WeatherCurrentDto>builder()
-                                        .comment("keep-alive")
-                                        .build()
-                                )
-                );
-    }
-
-    @GetMapping(value = "/stream/all", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ServerSentEvent<WeatherCurrentDto>> streamAllLocations(
-            @AuthenticationPrincipal Jwt jwt) {
-        return weatherStreamService.streamWeatherForUser(jwt.getSubject())
                 .map(weatherData -> ServerSentEvent.<WeatherCurrentDto>builder()
                         .id(UUID.randomUUID().toString())
                         .event("weather-update")

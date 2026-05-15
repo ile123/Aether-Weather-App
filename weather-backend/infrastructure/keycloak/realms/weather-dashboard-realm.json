@@ -9,25 +9,28 @@
   "resetPasswordAllowed": true,
   "editUsernameAllowed": false,
   "bruteForceProtected": true,
-
   "accessTokenLifespan": 600,
   "ssoSessionIdleTimeout": 1800,
   "ssoSessionMaxLifespan": 36000,
   "offlineSessionIdleTimeout": 2592000,
   "refreshTokenMaxReuse": 0,
   "revokeRefreshToken": true,
-
   "roles": {
     "realm": [
-      { "name": "USER", "description": "Standard user" },
-      { "name": "ADMIN", "description": "Administrator" },
+      {
+        "name": "USER",
+        "description": "Standard user"
+      },
+      {
+        "name": "ADMIN",
+        "description": "Administrator"
+      },
       {
         "name": "PREMIUM_USER",
         "description": "Premium user with extra features"
       }
     ]
   },
-
   "clients": [
     {
       "clientId": "weather-frontend",
@@ -39,8 +42,13 @@
       "attributes": {
         "pkce.code.challenge.method": "S256"
       },
-      "redirectUris": ["http://localhost:4200/*", "http://localhost:4200"],
-      "webOrigins": ["http://localhost:4200"],
+      "redirectUris": [
+        "http://localhost:4200/*",
+        "http://localhost:4200"
+      ],
+      "webOrigins": [
+        "http://localhost:4200"
+      ],
       "protocol": "openid-connect"
     },
     {
@@ -53,10 +61,11 @@
       "serviceAccountsEnabled": true,
       "directAccessGrantsEnabled": true,
       "protocol": "openid-connect",
-      "redirectUris": ["http://localhost:8081/*"]
+      "redirectUris": [
+        "http://localhost:8081/*"
+      ]
     }
   ],
-
   "users": [
     {
       "username": "test-user",
@@ -66,9 +75,16 @@
       "enabled": true,
       "emailVerified": true,
       "credentials": [
-        { "type": "password", "value": "password", "temporary": false }
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
       ],
-      "realmRoles": ["USER", "default-roles-weather-dashboard"]
+      "realmRoles": [
+        "USER",
+        "default-roles-weather-dashboard"
+      ]
     },
     {
       "username": "test-admin",
@@ -78,9 +94,17 @@
       "enabled": true,
       "emailVerified": true,
       "credentials": [
-        { "type": "password", "value": "password", "temporary": false }
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
       ],
-      "realmRoles": ["USER", "ADMIN", "default-roles-weather-dashboard"]
+      "realmRoles": [
+        "USER",
+        "ADMIN",
+        "default-roles-weather-dashboard"
+      ]
     },
     {
       "username": "test-premium",
@@ -90,9 +114,17 @@
       "enabled": true,
       "emailVerified": true,
       "credentials": [
-        { "type": "password", "value": "password", "temporary": false }
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
       ],
-      "realmRoles": ["USER", "PREMIUM_USER", "default-roles-weather-dashboard"]
+      "realmRoles": [
+        "USER",
+        "PREMIUM_USER",
+        "default-roles-weather-dashboard"
+      ]
     }
   ]
 }

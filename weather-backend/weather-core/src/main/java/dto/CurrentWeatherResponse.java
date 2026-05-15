@@ -53,5 +53,6 @@ public record CurrentWeatherResponse(
 
             @JsonProperty("is_day")
             Integer isDay
-    ) {}
+    ) {
+    }
 }

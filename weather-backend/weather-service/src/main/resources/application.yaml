@@ -55,3 +55,6 @@ resilience4j:
     instances:
       openMeteo:
         timeoutDuration: 10s
+logging:
+  level:
+    org.springframework.boot.autoconfigure: DEBUG

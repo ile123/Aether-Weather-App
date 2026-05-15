@@ -1,9 +1,4 @@
 spring:
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: http://keycloak:8080/realms/weather-dashboard
   data:
     redis:
       host: redis
@@ -22,7 +17,6 @@ spring:
               args:
                 name: weatherCB
                 fallbackUri: forward:/fallback/weather
-
         - id: alert-service
           uri: http://alert-service:8083
           predicates:
@@ -32,20 +26,8 @@ spring:
               args:
                 name: alertCB
                 fallbackUri: forward:/fallback/alert
-
-        - id: preferences-service
-          uri: http://preferences-service:8084
-          predicates:
-            - Path=/api/preferences/**
-          filters:
-            - name: CircuitBreaker
-              args:
-                name: preferencesCB
-                fallbackUri: forward:/fallback/preferences
-
 server:
   port: 8081
-
 logging:
   level:
     org.springframework.cloud.gateway: INFO

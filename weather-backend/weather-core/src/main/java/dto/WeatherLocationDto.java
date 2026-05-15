@@ -9,4 +9,5 @@ public record WeatherLocationDto(
         String country,
         BigDecimal latitude,
         BigDecimal longitude
-) {}
+) {
+}

@@ -3,11 +3,6 @@ spring:
     web-application-type: reactive
   application:
     name: api-gateway
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${KEYCLOAK_URL:http://localhost:8080}/realms/weather-dashboard
   data:
     redis:
       host: ${REDIS_HOST:localhost}
@@ -26,7 +21,6 @@ spring:
               args:
                 name: weatherCB
                 fallbackUri: forward:/fallback/weather
-
         - id: alert-service
           uri: http://${ALERT_SERVICE_HOST:localhost}:${ALERT_SERVICE_PORT:8083}
           predicates:
@@ -36,16 +30,6 @@ spring:
               args:
                 name: alertCB
                 fallbackUri: forward:/fallback/alert
-
-        - id: preferences-service
-          uri: http://${PREFERENCES_SERVICE_HOST:localhost}:${PREFERENCES_SERVICE_PORT:8084}
-          predicates:
-            - Path=/api/preferences/**
-          filters:
-            - name: CircuitBreaker
-              args:
-                name: preferencesCB
-                fallbackUri: forward:/fallback/preferences
 
 server:
   port: ${GATEWAY_PORT:8081}
@@ -70,31 +54,25 @@ resilience4j:
   timelimiter:
     instances:
       weatherCB:
-        timeoutDuration: 3s
+        timeoutDuration: 10s
       alertCB:
-        timeoutDuration: 3s
-      preferencesCB:
-        timeoutDuration: 3s
+        timeoutDuration: 10s
   circuitbreaker:
     instances:
       weatherCB:
         slidingWindowSize: 10
         failureRateThreshold: 50
-        waitDurationInOpenState: 10s
+        waitDurationInOpenState: 30s
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
+        minimumNumberOfCalls: 5
       alertCB:
         slidingWindowSize: 10
         failureRateThreshold: 50
-        waitDurationInOpenState: 10s
+        waitDurationInOpenState: 30s
         permittedNumberOfCallsInHalfOpenState: 3
         automaticTransitionFromOpenToHalfOpenEnabled: true
-      preferencesCB:
-        slidingWindowSize: 10
-        failureRateThreshold: 50
-        waitDurationInOpenState: 10s
-        permittedNumberOfCallsInHalfOpenState: 3
-        automaticTransitionFromOpenToHalfOpenEnabled: true
+        minimumNumberOfCalls: 5
 
 logging:
   level:

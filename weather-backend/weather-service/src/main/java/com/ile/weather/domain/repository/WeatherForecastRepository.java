@@ -15,28 +15,28 @@ public interface WeatherForecastRepository
         extends ReactiveCrudRepository<WeatherForecast, UUID> {
 
     @Query("""
-        SELECT * FROM weather_forecast
-        WHERE location_id = :locationId
-        AND forecast_time >= :from
-        ORDER BY forecast_time ASC
-        """)
+            SELECT * FROM weather_forecast
+            WHERE location_id = :locationId
+            AND forecast_time >= :from
+            ORDER BY forecast_time ASC
+            """)
     Flux<WeatherForecast> findUpcomingByLocationId(
             UUID locationId, LocalDateTime from);
 
     @Query("""
-        SELECT * FROM weather_forecast
-        WHERE location_id = :locationId
-        AND forecast_time BETWEEN :from AND :to
-        ORDER BY forecast_time ASC
-        """)
+            SELECT * FROM weather_forecast
+            WHERE location_id = :locationId
+            AND forecast_time BETWEEN :from AND :to
+            ORDER BY forecast_time ASC
+            """)
     Flux<WeatherForecast> findByLocationIdAndForecastTimeBetween(
             UUID locationId, LocalDateTime from, LocalDateTime to);
 
     @Query("""
-        DELETE FROM weather_forecast
-        WHERE location_id = :locationId
-        AND forecast_time < :before
-        """)
+            DELETE FROM weather_forecast
+            WHERE location_id = :locationId
+            AND forecast_time < :before
+            """)
     Mono<Void> deleteStaleByLocationId(UUID locationId, LocalDateTime before);
 
     Mono<Void> deleteAllByLocationId(UUID locationId);

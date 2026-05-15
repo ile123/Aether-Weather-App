@@ -9,4 +9,5 @@ public record ErrorItem(
         String pointer,
         String parameter,
         String header
-) {}
+) {
+}

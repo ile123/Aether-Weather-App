@@ -26,15 +26,4 @@ public class WeatherStreamService {
                 .doOnTerminate(() -> log.info("SSE stream terminated for location: {}", locationName));
     }
 
-    public Flux<WeatherCurrentDto> streamWeatherForUser(String userId) {
-        return weatherService.getSavedLocations(userId)
-                .flatMap(location ->
-                        Flux.interval(Duration.ofSeconds(30))
-                                .flatMap(tick -> weatherService.getCurrentWeather(location.name()))
-                )
-                .onBackpressureDrop(dropped ->
-                        log.warn("Dropped weather update due to backpressure for user: {}", userId))
-                .doOnCancel(() -> log.info("SSE client disconnected for user: {}", userId))
-                .doOnTerminate(() -> log.info("SSE stream terminated for user: {}", userId));
-    }
 }

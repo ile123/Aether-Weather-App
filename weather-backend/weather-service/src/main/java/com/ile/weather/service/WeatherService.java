@@ -3,6 +3,7 @@ package com.ile.weather.service;
 import aop.Audited;
 import aop.LogExecutionTime;
 import aop.ValidateLocation;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ile.weather.client.OpenMeteoClient;
 import com.ile.weather.domain.entity.WeatherCurrent;
 import com.ile.weather.domain.entity.WeatherForecast;
@@ -14,10 +15,12 @@ import com.ile.weather.mapper.WeatherMapper;
 import dto.WeatherCurrentDto;
 import dto.WeatherForecastDto;
 import dto.WeatherLocationDto;
+import dto.WeatherUpdateEvent;
 import exception.ExternalApiException;
 import exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.WeatherDescriptionMapper;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -36,18 +39,24 @@ public class WeatherService {
     private final WeatherCurrentRepository weatherCurrentRepository;
     private final WeatherForecastRepository weatherForecastRepository;
     private final WeatherMapper weatherMapper;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
 
     public WeatherService(
             OpenMeteoClient openMeteoClient,
             WeatherLocationRepository weatherLocationRepository,
             WeatherCurrentRepository weatherCurrentRepository,
             WeatherForecastRepository weatherForecastRepository,
-            WeatherMapper weatherMapper) {
+            WeatherMapper weatherMapper,
+            KafkaTemplate<String, String> kafkaTemplate,
+            ObjectMapper objectMapper) {
         this.openMeteoClient = openMeteoClient;
         this.weatherLocationRepository = weatherLocationRepository;
         this.weatherCurrentRepository = weatherCurrentRepository;
         this.weatherForecastRepository = weatherForecastRepository;
         this.weatherMapper = weatherMapper;
+        this.kafkaTemplate = kafkaTemplate;
+        this.objectMapper = objectMapper;
     }
 
     @LogExecutionTime
@@ -64,7 +73,6 @@ public class WeatherService {
                                     }
                                     var result = geocodingResponse.results().getFirst();
                                     var newLocation = WeatherLocation.builder()
-                                            .id(UUID.randomUUID())
                                             .name(result.name())
                                             .country(result.country())
                                             .countryCode(result.countryCode())
@@ -81,7 +89,6 @@ public class WeatherService {
                                 .flatMap(response -> {
                                     var current = response.current();
                                     var weatherCurrent = WeatherCurrent.builder()
-                                            .id(UUID.randomUUID())
                                             .locationId(location.getId())
                                             .temperature(current.temperature())
                                             .apparentTemperature(current.apparentTemperature())
@@ -96,7 +103,23 @@ public class WeatherService {
                                             .recordedAt(LocalDateTime.now())
                                             .build();
                                     return weatherCurrentRepository.save(weatherCurrent)
-                                            .map(saved -> weatherMapper.toWeatherCurrentDto(saved, location));
+                                            .flatMap(saved -> {
+                                                try {
+                                                    var event = new WeatherUpdateEvent(
+                                                            location.getName(),
+                                                            saved.getTemperature(),
+                                                            saved.getWindSpeed(),
+                                                            saved.getPrecipitation(),
+                                                            saved.getRelativeHumidity(),
+                                                            saved.getRecordedAt()
+                                                    );
+                                                    kafkaTemplate.send("weather-updates", location.getName(),
+                                                            objectMapper.writeValueAsString(event));
+                                                } catch (Exception e) {
+                                                    log.warn("Failed to publish weather update event: {}", e.getMessage());
+                                                }
+                                                return Mono.just(weatherMapper.toWeatherCurrentDto(saved, location));
+                                            });
                                 })
                 )
                 .onErrorMap(e -> new ExternalApiException("Failed to fetch weather: ", e.getMessage()));
@@ -115,7 +138,6 @@ public class WeatherService {
                                     }
                                     var result = geocodingResponse.results().getFirst();
                                     var newLocation = WeatherLocation.builder()
-                                            .id(UUID.randomUUID())
                                             .name(result.name())
                                             .country(result.country())
                                             .countryCode(result.countryCode())
@@ -136,7 +158,6 @@ public class WeatherService {
 
                                     for (int i = 0; i < hourly.time().size(); i++) {
                                         forecasts.add(WeatherForecast.builder()
-                                                .id(UUID.randomUUID())
                                                 .locationId(location.getId())
                                                 .forecastTime(LocalDateTime.parse(hourly.time().get(i)))
                                                 .temperature(hourly.temperature().get(i))
@@ -187,7 +208,6 @@ public class WeatherService {
                     }
                     var result = geocodingResponse.results().getFirst();
                     var location = WeatherLocation.builder()
-                            .id(UUID.randomUUID())
                             .userId(userId)
                             .name(result.name())
                             .country(result.country())
