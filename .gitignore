@@ -64,12 +64,14 @@ gradle-app.setting
 !gradle-wrapper.jar
 !gradle-wrapper.properties
 
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-dist/
-.npm
+weather-frontend/node_modules/
+weather-frontend/dist/
+weather-frontend/.angular/
+weather-frontend/npm-debug.log*
+weather-frontend/yarn-debug.log*
+weather-frontend/yarn-error.log*
+weather-frontend/.npm/
+weather-frontend/.cache/
 
 *.tmp
 *.bak
