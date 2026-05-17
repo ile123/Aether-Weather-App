@@ -1,0 +1,59 @@
+.weather-card {
+  min-height: 200px;
+}
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 16px;
+  color: #666;
+}
+.location-name {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #333;
+}
+.main-temp {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.emoji {
+  font-size: 3rem;
+}
+.temp {
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #1976d2;
+}
+.description {
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 16px;
+  text-transform: capitalize;
+}
+.details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  padding: 8px;
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+.label {
+  font-size: 0.75rem;
+  color: #999;
+}
+.value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+}

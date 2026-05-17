@@ -1,0 +1,38 @@
+.forecast-card {
+  min-width: 100px;
+  text-align: center;
+  flex-shrink: 0;
+}
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+}
+.time {
+  font-size: 0.75rem;
+  color: #666;
+}
+.emoji {
+  font-size: 1.8rem;
+}
+.temp {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1976d2;
+}
+.precip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.precip-prob {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #42a5f5;
+}
+.precip-label {
+  font-size: 0.7rem;
+  color: #999;
+}

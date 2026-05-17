@@ -1,0 +1,16 @@
+.location-selector {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+mat-form-field {
+  flex: 1;
+  max-width: 400px;
+}
+button {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 1.5rem;
+}

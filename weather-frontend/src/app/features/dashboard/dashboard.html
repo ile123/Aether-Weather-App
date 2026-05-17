@@ -1,0 +1,30 @@
+<div class="dashboard">
+  <div class="search-section">
+    <app-location-selector (locationSelected)="onLocationSelected($event)" />
+  </div>
+
+  @if (currentWeather$ | async; as weather) {
+  <div class="weather-section">
+    <app-weather-card [weather]="weather" />
+  </div>
+  } @else if (loading()) {
+  <div class="weather-section">
+    <app-weather-card [weather]="null" />
+  </div>
+  } @if (forecasts().length > 0) {
+  <div class="forecast-section">
+    <h3>48-Hour Forecast</h3>
+    <div class="forecast-row">
+      @for (f of forecasts(); track f.forecastTime) {
+      <app-forecast-card [forecast]="f" />
+      }
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <h3>Temperature Trend</h3>
+    <canvas baseChart [data]="chartData" [options]="chartOptions" type="line">
+    </canvas>
+  </div>
+  }
+</div>

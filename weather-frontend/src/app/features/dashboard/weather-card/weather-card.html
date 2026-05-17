@@ -1,0 +1,37 @@
+<mat-card class="weather-card">
+  @if (!weather) {
+  <div class="loading">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Loading weather data...</p>
+  </div>
+  } @else {
+  <mat-card-content>
+    <div class="location-name">{{ weather.locationName }}</div>
+    <div class="main-temp">
+      <span class="emoji">{{ getEmoji(weather.weatherCode) }}</span>
+      <span class="temp">{{ weather.temperature | number:'1.0-1' }}°C</span>
+    </div>
+    <div class="description">{{ weather.description }}</div>
+    <div class="details">
+      <div class="detail-item">
+        <span class="label">Feels like</span>
+        <span class="value"
+          >{{ weather.apparentTemperature | number:'1.0-1' }}°C</span
+        >
+      </div>
+      <div class="detail-item">
+        <span class="label">Humidity</span>
+        <span class="value">{{ weather.relativeHumidity }}%</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Wind</span>
+        <span class="value">{{ weather.windSpeed | number:'1.0-1' }} km/h</span>
+      </div>
+      <div class="detail-item">
+        <span class="label">Condition</span>
+        <span class="value">{{ weather.isDay ? 'Day' : 'Night' }}</span>
+      </div>
+    </div>
+  </mat-card-content>
+  }
+</mat-card>

@@ -1,0 +1,11 @@
+<mat-card class="forecast-card">
+  <mat-card-content>
+    <div class="time">{{ forecast.forecastTime | date:'EEE HH:mm' }}</div>
+    <div class="emoji">{{ getEmoji(forecast.weatherCode) }}</div>
+    <div class="temp">{{ forecast.temperature | number:'1.0-1' }}°C</div>
+    <div class="precip">
+      <span class="precip-prob">{{ forecast.precipitationProbability }}%</span>
+      <span class="precip-label">rain</span>
+    </div>
+  </mat-card-content>
+</mat-card>

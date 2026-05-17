@@ -1,0 +1,21 @@
+<div class="location-selector">
+  <mat-form-field appearance="outline">
+    <mat-label>Search location</mat-label>
+    <input
+      matInput
+      [(ngModel)]="locationInput"
+      (keyup.enter)="onSearch()"
+      placeholder="e.g. London, Tokyo, New York"
+    />
+    <mat-icon matSuffix>place</mat-icon>
+  </mat-form-field>
+  <button
+    mat-flat-button
+    color="primary"
+    (click)="onSearch()"
+    [disabled]="!locationInput.trim()"
+  >
+    <mat-icon>search</mat-icon>
+    Search
+  </button>
+</div>
