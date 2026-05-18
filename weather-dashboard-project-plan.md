@@ -49,52 +49,12 @@ Shared Infrastructure:
 
 ---
 
-## Simplified Roadmap
 
-```
-DONE  TICKET-001   Parent POM and Project Structure      ✅
-DONE  TICKET-002   Docker Compose Infrastructure         ✅
-SKIP  TICKET-003   Keycloak — removed from project       ✗
-DONE  TICKET-004   Kubernetes Setup                     ✅
-DONE  TICKET-005   API Gateway                          ✅
-DONE  TICKET-006   weather-core Shared Library          ✅
-DONE  TICKET-007   Weather Service Setup                ✅
-DONE  TICKET-008   Weather Service Domain Layer         ✅
-DONE  TICKET-009   Open-Meteo API Client                ✅
-DONE  TICKET-010   Weather Service Business Logic       ✅
-DONE  TICKET-011   Weather Service REST API             ✅
-DONE  TICKET-012   SSE Real-Time Streaming              ✅
 
-NEXT  TICKET-013   Alert Service Setup
-      TICKET-014   Alert Service Domain and Rules Engine
-      TICKET-015   Alert Service Kafka Listeners
-      TICKET-016   Alert Service REST API
-      TICKET-017   Zipkin Tracing (basic)
-      TICKET-018   Health Checks and Actuator
-      TICKET-019   Angular Project Setup
-      TICKET-020   Angular Services
-      TICKET-021   Dashboard Component
 
-      DONE. Ship it.
-```
+## Tickets
 
----
-
-## What Was Deliberately Cut
-
-| Skipped | Why |
-|---|---|
-| Keycloak authentication | Added complexity (tokens, realm config, K8s restart issues) with no new learning about the core tech stack. X-User-Id header is enough for demonstrating user-scoped data. |
-| User Preferences Service | Adds a 4th service with no new concepts after alert service is working. |
-| Email notifications | Complex SMTP setup that teaches nothing new after Kafka is working. |
-| Full test suite | Write tests for the alert rules engine — the highest-value unit. |
-| CI/CD | Add this after the app is finished. |
-
----
-
-## Completed Tickets
-
-### TICKET-001: Project Structure and Parent POM ✅
+### TICKET-001: Project Structure and Parent POM
 
 **Description**: Multi-module Maven project with parent POM.
 
@@ -114,7 +74,7 @@ NEXT  TICKET-013   Alert Service Setup
 
 ---
 
-### TICKET-002: Docker Compose Infrastructure ✅
+### TICKET-002: Docker Compose Infrastructure
 
 **Description**: Full local development infrastructure via Docker Compose.
 
@@ -135,19 +95,7 @@ kubectl get pods -n weather-app
 
 ---
 
-### TICKET-003: Keycloak ✗ REMOVED
-
-**Why removed**: Every curl test needed a token, Kubernetes startup required a realm import step, and debugging consumed more time than learning the actual stack. Removed in favour of a simple `X-User-Id` request header for user identity.
-
-**What changed as a result**:
-- Removed `spring-boot-starter-oauth2-resource-server` from weather-service and alert-service pom.xml
-- `SecurityConfig.java` in all services now uses `.anyExchange().permitAll()`
-- `@AuthenticationPrincipal Jwt jwt` replaced with `@RequestHeader(value = "X-User-Id", defaultValue = "anonymous") String userId`
-- Keycloak removed from Docker Compose and Kubernetes manifests
-
----
-
-### TICKET-004: Kubernetes Setup ✅
+### TICKET-003: Kubernetes Setup
 
 **Description**: Full K8s manifests with kustomize overlays.
 
@@ -167,7 +115,7 @@ kubectl get pods -n weather-app
 
 ---
 
-### TICKET-005: API Gateway ✅
+### TICKET-004: API Gateway
 
 **Description**: Spring Cloud Gateway with CORS and circuit breakers. No JWT validation.
 
@@ -190,7 +138,7 @@ curl "http://localhost:8081/api/weather/current?location=London"
 
 ---
 
-### TICKET-006: weather-core Shared Library ✅
+### TICKET-005: weather-core Shared Library
 
 **Description**: Shared Maven module used by all services.
 
@@ -212,7 +160,7 @@ curl "http://localhost:8081/api/weather/current?location=London"
 
 ---
 
-### TICKET-007: Weather Service Setup ✅
+### TICKET-006: Weather Service Setup
 
 **Description**: Spring WebFlux + R2DBC service with Liquibase migrations.
 
@@ -241,7 +189,7 @@ curl http://localhost:8081/actuator/health
 
 ---
 
-### TICKET-008: Weather Service Domain Layer ✅
+### TICKET-007: Weather Service Domain Layer
 
 **Description**: Entities, repositories, and Liquibase migrations for weather data.
 
@@ -258,7 +206,7 @@ kubectl exec -n weather-app   $(kubectl get pods -n weather-app -l app=postgres 
 
 ---
 
-### TICKET-009: Open-Meteo API Client ✅
+### TICKET-008: Open-Meteo API Client
 
 **Description**: OpenMeteoClient using WebClient with caching, retries, and circuit breakers.
 
@@ -279,7 +227,7 @@ kubectl exec -n weather-app   $(kubectl get pods -n weather-app -l app=redis -o 
 
 ---
 
-### TICKET-010: Weather Service — Business Logic and AOP ✅
+### TICKET-09: Weather Service — Business Logic and AOP
 
 **Description**: WeatherService orchestrating OpenMeteoClient and repositories with AOP.
 
@@ -308,7 +256,7 @@ kubectl logs -n weather-app -l app=weather-service --tail=20
 
 ---
 
-### TICKET-011: Weather Service — REST API and Global Exception Handler ✅
+### TICKET-010: Weather Service — REST API and Global Exception Handler
 
 **Description**: WeatherController with reactive endpoints and GlobalExceptionHandler.
 
@@ -354,7 +302,7 @@ curl -v "http://localhost:8081/api/weather/forecast?location=London&days=20"
 
 ---
 
-### TICKET-012: Weather Service — SSE Real-Time Streaming ✅
+### TICKET-011: Weather Service — SSE Real-Time Streaming
 
 **Description**: Server-Sent Events endpoint streaming weather updates every 30 seconds.
 
@@ -379,15 +327,10 @@ kubectl logs -n weather-app -l app=weather-service --tail=10
 # Should show: "SSE client disconnected for location: London"
 ```
 
----
-
-## Remaining Tickets
 
 ---
 
-### TICKET-013: Alert Service — Project Setup ✅
-
-**Priority**: Critical | **Estimate**: 2h
+### TICKET-012: Alert Service — Project Setup
 
 **Description**: Create the alert-service Maven module — same reactive stack as weather-service with Kafka added. No auth dependency.
 
@@ -482,9 +425,7 @@ kubectl logs -n weather-app -l app=alert-service | grep -i kafka
 
 ---
 
-### TICKET-014: Alert Service — Domain and Rules Engine ✅
-
-**Priority**: Critical | **Estimate**: 4h
+### TICKET-013: Alert Service — Domain and Rules Engine
 
 **Description**: Domain entities, repositories, and a strategy-pattern rules evaluation engine.
 
@@ -544,9 +485,7 @@ void temperatureEvaluator_whenAboveThreshold_shouldTrigger() {
 
 ---
 
-### TICKET-015: Alert Service — Kafka Event Listeners ✅
-
-**Priority**: Critical | **Estimate**: 4h
+### TICKET-014: Alert Service — Kafka Event Listeners
 
 **Description**: Consume weather-updates events from Kafka, evaluate alert rules, and persist triggered notifications.
 
@@ -614,9 +553,7 @@ kubectl logs -n weather-app -l app=alert-service --tail=20
 
 ---
 
-### TICKET-016: Alert Service — REST API ✅
-
-**Priority**: Critical | **Estimate**: 3h
+### TICKET-015: Alert Service — REST API
 
 **Description**: CRUD endpoints for managing alert rules and reading notifications. User identity comes from `X-User-Id` header.
 
@@ -692,9 +629,7 @@ kubectl exec -n weather-app \
 
 ---
 
-### TICKET-017: Zipkin Tracing (basic) ✅
-
-**Priority**: Medium | **Estimate**: 1h
+### TICKET-016: Zipkin Tracing (basic)
 
 **Description**: Add trace IDs to logs so you can follow a request across gateway → weather-service → alert-service in Zipkin.
 
@@ -737,9 +672,7 @@ kubectl logs -n weather-app -l app=weather-service --tail=10
 
 ---
 
-### TICKET-018: Health Checks and Actuator ✅
-
-**Priority**: Medium | **Estimate**: 1h
+### TICKET-017: Health Checks and Actuator
 
 **Description**: Liveness and readiness probes for Kubernetes.
 
@@ -796,9 +729,7 @@ kubectl describe pods -n weather-app -l app=weather-service | grep -A3 "Liveness
 
 ---
 
-### TICKET-019: Angular Project Setup ✅
-
-**Priority**: Critical | **Estimate**: 2h
+### TICKET-018: Angular Project Setup
 
 **Description**: Create the Angular 17+ project with Material, routing, and proxy configuration. No auth library needed.
 
@@ -862,9 +793,7 @@ ng build --configuration=production
 
 ---
 
-### TICKET-020: Angular Services
-
-**Priority**: Critical | **Estimate**: 2h
+### TICKET-019: Angular Services
 
 **Description**: Create typed HTTP services for the weather API. No auth, no interceptors, no user-specific features — just plain HTTP calls to fetch and stream weather data.
 
@@ -957,9 +886,7 @@ ng serve
 
 ---
 
-### TICKET-021: Dashboard Component
-
-**Priority**: Critical | **Estimate**: 3h
+### TICKET-020: Dashboard Component
 
 **Description**: Build the main dashboard — location search, current weather card, forecast row, real-time SSE updates, and a temperature trend chart. No user accounts, no saved locations, no alerts page.
 

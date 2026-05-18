@@ -12,6 +12,14 @@ spring:
       enabled: false
     gateway:
       routes:
+        - id: weather-service-forecast
+          uri: http://weather-service:8082
+          predicates:
+            - Path=/api/weather/forecast/**
+        - id: weather-service-stream
+          uri: http://${WEATHER_SERVICE_HOST:localhost}:${WEATHER_SERVICE_PORT:8082}
+          predicates:
+            - Path=/api/weather/stream/**
         - id: weather-service
           uri: http://${WEATHER_SERVICE_HOST:localhost}:${WEATHER_SERVICE_PORT:8082}
           predicates:
