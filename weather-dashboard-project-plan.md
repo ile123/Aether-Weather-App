@@ -58,7 +58,7 @@ Shared Infrastructure:
 
 **Description**: Multi-module Maven project with parent POM.
 
-**What was done**:
+**Tasks**:
 - Parent pom.xml with Spring Boot 3.4.4 and packaging pom
 - Spring Cloud BOM 2024.0.1 in dependencyManagement
 - Shared dependencies: spring-boot-starter-validation, spring-boot-starter-test, mapstruct, lombok
